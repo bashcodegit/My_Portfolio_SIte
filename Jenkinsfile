@@ -1,10 +1,11 @@
-pipeline {
-  agent any 
-  stages {
-    stage('stage1') {
-      steps {
-        echo 'Hello World,,,Bashid kk mod! Token added check'
-      }
+node {
+  stage('SCM') {
+    checkout scm
+  }
+  stage('SonarQube Analysis') {
+    def scannerHome = tool 'SonarScanner';
+    withSonarQubeEnv() {
+      sh "${scannerHome}/bin/sonar-scanner"
     }
   }
 }
