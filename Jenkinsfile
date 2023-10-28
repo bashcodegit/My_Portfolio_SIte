@@ -1,24 +1,14 @@
-pipeline {
-    agent any
-
-    stages {
-        stage('SCM') {
-            steps {
-                checkout scm
-            }
-        }
-        stage('Test') {
-          steps {
-            echo 'Application Testing'
-          }
-        }
-
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('SonarScanner') {
-                    sh "${env.SCANNER_HOME}/bin/sonar-scanner"
-                    }
-                }
-            }
+node {
+  stage('SCM') {
+    checkout scm
+  }
+  stage('Test') {
+    echo 'Application Testing'
+  }
+  stage('SonarQube Analysis') {
+    def scannerHome = tool 'SonarScanner';
+    withSonarQubeEnv() {
+      sh "${scannerHome}/bin/sonar-scanner"
     }
+  }
 }
